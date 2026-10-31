@@ -16,7 +16,6 @@ public class OrderRepository : Repository<Order>, IOrderRepository
                  .OrderByDescending(o => o.OrderDate)
                  .ToListAsync(ct);
 
-    // Tracked on purpose: services modify the order (status, stock) and save.
     public async Task<Order?> GetByIdWithDetailsAsync(int id, CancellationToken ct = default) =>
         await Set.Include(o => o.Customer)
                  .Include(o => o.Items).ThenInclude(i => i.Product)

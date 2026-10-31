@@ -9,6 +9,6 @@ public class OrderItem
     public Product? Product { get; set; }
     public int Quantity { get; set; }
 
-    /// <summary>Product price at the moment the order was created (price snapshot).</summary>
+    
     public decimal UnitPrice { get; set; }
 }

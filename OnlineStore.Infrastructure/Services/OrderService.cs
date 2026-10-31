@@ -37,7 +37,6 @@ public class OrderService : IOrderService
         if (!await _customers.ExistsAsync(customerId, ct))
             throw new NotFoundException(nameof(Customer), customerId);
 
-        // Merge duplicate product lines: [{1,2},{1,3}] -> {1,5}
         var merged = lines.GroupBy(l => l.ProductId)
                           .Select(g => new OrderLine(g.Key, g.Sum(x => x.Quantity)))
                           .ToList();
@@ -68,15 +67,14 @@ public class OrderService : IOrderService
             {
                 ProductId = product.Id,
                 Quantity = line.Quantity,
-                UnitPrice = product.Price // price snapshot
+                UnitPrice = product.Price 
             });
         }
 
-        // Total is always calculated on the server; client-provided totals are never trusted.
         order.TotalAmount = order.Items.Sum(i => i.UnitPrice * i.Quantity);
 
         await _orders.AddAsync(order, ct);
-        await _uow.SaveChangesAsync(ct); // single SaveChanges = one atomic transaction (order + stock)
+        await _uow.SaveChangesAsync(ct); 
         return await GetByIdAsync(order.Id, ct);
     }
 

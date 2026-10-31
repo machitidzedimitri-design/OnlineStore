@@ -5,10 +5,6 @@ using OnlineStore.Core.Interfaces;
 
 namespace OnlineStore.Infrastructure.Services;
 
-/// <summary>
-/// Typed HttpClient that calls a public exchange-rate API (https://open.er-api.com).
-/// The BaseAddress is configured in Program.cs from appsettings.json.
-/// </summary>
 public class ExchangeRateApiClient : ICurrencyConverter
 {
     private readonly HttpClient _http;

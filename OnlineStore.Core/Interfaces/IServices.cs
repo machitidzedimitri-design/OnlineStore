@@ -39,9 +39,9 @@ public interface IOrderService
     Task DeleteAsync(int id, CancellationToken ct = default);
 }
 
-/// <summary>Abstraction over an external exchange-rate API (consumed via HttpClient).</summary>
+
 public interface ICurrencyConverter
 {
-    /// <summary>Returns the exchange rate from USD to the given currency code.</summary>
+    
     Task<decimal> GetRateFromUsdAsync(string currencyCode, CancellationToken ct = default);
 }
