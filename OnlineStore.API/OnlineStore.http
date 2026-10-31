@@ -1,0 +1,88 @@
+@host = http://localhost:5080
+
+### Categories (3 are seeded: 1 Computers, 2 Phones, 3 Accessories)
+GET {{host}}/api/categories
+
+###
+POST {{host}}/api/categories
+Content-Type: application/json
+
+{ "name": "Furniture", "description": "Desks and chairs" }
+
+### Products
+POST {{host}}/api/products
+Content-Type: application/json
+
+{ "name": "AERO Laptop X1", "description": "14-inch laptop", "price": 1299.99, "stockQuantity": 10, "categoryId": 1 }
+
+###
+GET {{host}}/api/products
+###
+GET {{host}}/api/products?categoryId=1
+###
+GET {{host}}/api/products/1
+
+### Validation error -> 400
+POST {{host}}/api/products
+Content-Type: application/json
+
+{ "name": "", "price": -5, "stockQuantity": -1, "categoryId": 1 }
+
+### Unknown product -> 404
+GET {{host}}/api/products/9999
+
+###
+PUT {{host}}/api/products/1
+Content-Type: application/json
+
+{ "name": "AERO Laptop X1", "description": "Updated", "price": 1199.99, "stockQuantity": 12, "categoryId": 1 }
+
+### Customers
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{ "firstName": "Nino", "lastName": "Beridze", "email": "nino@example.com", "phone": "+995555123456" }
+
+### Duplicate email -> 409
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{ "firstName": "Nino", "lastName": "Other", "email": "nino@example.com" }
+
+### Bad email -> 400
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{ "firstName": "A", "lastName": "B", "email": "not-an-email" }
+
+### Orders - create (total is calculated by the server)
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{ "customerId": 1, "items": [ { "productId": 1, "quantity": 2 } ] }
+
+### Insufficient stock -> 409, order is NOT created
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{ "customerId": 1, "items": [ { "productId": 1, "quantity": 100000 } ] }
+
+###
+GET {{host}}/api/orders
+###
+GET {{host}}/api/orders/1
+
+###
+PUT {{host}}/api/orders/1/status
+Content-Type: application/json
+
+{ "status": "Confirmed" }
+
+### External API via HttpClient
+GET {{host}}/api/orders/1/converted?currency=EUR
+
+### Delete product used in an order -> 409
+DELETE {{host}}/api/products/1
+
+### Delete a Confirmed order -> 409 (only Pending/Cancelled can be deleted)
+DELETE {{host}}/api/orders/1
